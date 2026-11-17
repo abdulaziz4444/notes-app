@@ -1,22 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Note } from "@/lib/types";
 import NoteCard from "@/components/NoteCard";
+import { loadNotes, saveNotes } from "@/lib/notes-storage";
+
 
 export default function NotesList() {
   const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    setNotes(loadNotes())
+  }, [])
+
+  function updateNotes(nextNote: Note[]) {
+    setNotes(nextNote)
+    saveNotes(nextNote)
+  }
 
   function addNote(formData: FormData) {
     const text = String(formData.get("text")).trim();
     if (text === "") return;
 
     const newNote: Note = { id: crypto.randomUUID(), text };
-    setNotes([...notes, newNote]);
+    updateNotes([...notes, newNote]);
   }
 
   function deleteNote(id: string) {
-    setNotes(notes.filter((note) => note.id !== id));
+    updateNotes(notes.filter((note) => note.id !== id));
   }
 
   return (
@@ -36,7 +47,7 @@ export default function NotesList() {
     </p>
     <button 
     type="button"
-    onClick={() => setNotes([])}
+    onClick={() => updateNotes([])}
     className="text-sm text-red-600 hover:underline"
     >
      Clear all
