@@ -8,7 +8,10 @@ type NoteCardProps = {
 export default function NoteCard ({ note, onDelete }: NoteCardProps) {
     return (
         <li className={`rounded border p-3 flex justify-between ${note.color ?? ""}`}>
-           <span> {note.text}</span>
+          <div>
+            <p>{note.text}</p>
+            <p className="text-xs text-gray-500">{new Date (note.createdAt).toLocaleString()}</p>
+          </div>
            <button
            type="button"
            onClick={() => onDelete(note.id)}
