@@ -3,34 +3,53 @@
 import { useEffect, useState } from "react";
 import type { Note } from "@/lib/types";
 import NoteCard from "@/components/NoteCard";
-import { loadNotes, saveNotes } from "@/lib/notes-storage";
+import {
+  createNoteRequest,
+  deleteNoteRequest,
+  fetchNotes,
+} from "@/lib/notes-api";
 
 export default function NotesList() {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [isloading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setNotes(loadNotes());
+    async function loadNotes() {
+      try {
+        const data = await fetchNotes();
+        setNotes(data);
+      } catch {
+        setError("Could not load notes. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadNotes();
   }, []);
 
-  function updateNotes(nextNote: Note[]) {
-    setNotes(nextNote);
-    saveNotes(nextNote);
-  }
-
-  function addNote(formData: FormData) {
+  async function addNote(formData: FormData) {
     const text = String(formData.get("text")).trim();
     if (text === "") return;
 
-    const newNote: Note = {
-      id: crypto.randomUUID(),
-      text,
-      createdAt: new Date().toISOString(),
-    };
-    updateNotes([...notes, newNote]);
+    try {
+      setError(null);
+      const newNote = await createNoteRequest(text);
+      setNotes((current) => [...current, newNote]);
+    } catch {
+      setError("Could not save the note.");
+    }
   }
 
-  function deleteNote(id: string) {
-    updateNotes(notes.filter((note) => note.id !== id));
+  async function deleteNote(id: string) {
+    try {
+      setError(null);
+      await deleteNoteRequest(id);
+      setNotes((current) => current.filter((note) => note.id !== id));
+    } catch {
+      setError("Could not delete the note.");
+    }
   }
 
   return (
@@ -43,22 +62,17 @@ export default function NotesList() {
         />
         <button className="rounded bg-black px-4 py-2 text-white">add</button>
       </form>
+      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+
       {notes.length > 0 && (
-        <div className="mt-6 flex items-center justify-between">
-          <p className="text-sm text-gray-600">
-            {notes.length} {notes.length === 1 ? "note" : "notes"}
-          </p>
-          <button
-            type="button"
-            onClick={() => updateNotes([])}
-            className="text-sm text-red-600 hover:underline"
-          >
-            Clear all
-          </button>
-        </div>
+        <p className="mt-6 text-sm text-gray-600">
+          {notes.length} {notes.length === 1 ? "note" : "Note"}
+        </p>
       )}
 
-      {notes.length === 0 ? (
+      {isloading ? (
+        <p className="mt-6 text-gray-500">Loading notes...</p>
+      ) : notes.length === 0 ? (
         <p className="mt-6 text-gray-500">No notes yet.</p>
       ) : (
         <ul className="mt-6 space-y-2">
