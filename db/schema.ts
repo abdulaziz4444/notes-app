@@ -5,7 +5,7 @@ export const notesTable = sqliteTable("notes", {
     .primaryKey()
     .$default(() => crypto.randomUUID()),
   text: text("text").notNull(),
-  createAt: text("create_at")
+  createdAt: text("created_at")
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
 });

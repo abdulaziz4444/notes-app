@@ -1,31 +1,30 @@
-import type {Note} from "@/lib/types"
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { notesTable } from "@/db/schema";
+import type { Note } from "@/lib/types";
 
-
-const notes: Note[] = [];
-
-
-export function getAllNotes(): Note[] {
-    return notes;
+export async function getAllNotes(): Promise<Note[]> {
+  return db.select().from(notesTable).orderBy(notesTable.createdAt);
 }
 
-export function getNoteById(id: string): Note | undefined {
-    return notes.find((note) => note.id === id)
+export async function getNoteById(id: string): Promise<Note | undefined> {
+  const rows = await db.select().from(notesTable).where(eq(notesTable.id, id));
+  return rows[0];
 }
 
-export function createNote(text: string): Note {
-const note: Note = {
-    id: crypto.randomUUID(),
-    text,
-    createdAt: new Date().toISOString()
-};
-notes.push(note);
-return note;
+export async function createNote(text: string): Promise<Note> {
+  const [note] = await db.insert(notesTable).values({ text }).returning();
+  return note;
 }
 
-export function deleteNote(id: string): boolean {
-    const index = notes.findIndex((note) => note.id === id)
-    if (index === -1) return false
+export async function deleteNote(id: string): Promise<boolean> {
+  const deleted = await db
+    .delete(notesTable)
+    .where(eq(notesTable.id, id))
+    .returning();
+  return deleted.length > 0;
+}
 
-    notes.splice(index, 1)
-    return true
+export async function clearNotes(): Promise<void> {
+  await db.delete(notesTable);
 }

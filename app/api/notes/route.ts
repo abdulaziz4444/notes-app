@@ -1,7 +1,7 @@
 import { createNote, getAllNotes } from "@/lib/notes-db";
 
 export async function GET() {
-  return Response.json(getAllNotes());
+  return Response.json(await getAllNotes());
 }
 
 export async function POST(request: Request) {
@@ -12,6 +12,6 @@ export async function POST(request: Request) {
     return Response.json({ error: "Text is required" }, { status: 400 });
   }
 
-  const note = createNote(text);
+  const note = await createNote(text);
   return Response.json(note, { status: 201 });
 }

@@ -4,7 +4,7 @@ type RouteParams = { params: Promise<{ id: string }> };
 
 export async function GET(_request: Request, { params }: RouteParams) {
   const { id } = await params;
-  const note = getNoteById(id);
+  const note = await getNoteById(id);
 
   if (!note) {
     return Response.json({ error: "Note not found" }, { status: 404 });
@@ -14,7 +14,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
 
 export async function DELETE(_request: Request, { params }: RouteParams) {
   const { id } = await params;
-  const deleted = deleteNote(id);
+  const deleted = await   deleteNote(id);
 
   if (!deleted) {
     return Response.json({ error: "Note not found" }, { status: 404 });
