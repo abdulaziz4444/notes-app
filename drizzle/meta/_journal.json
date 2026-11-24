@@ -15,6 +15,13 @@
       "when": 1795298704979,
       "tag": "0001_warm_mesmero",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1795548183149,
+      "tag": "0002_woozy_albert_cleary",
+      "breakpoints": true
     }
   ]
 }
