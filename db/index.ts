@@ -1,3 +1,4 @@
+import "server-only";
 import { drizzle } from "drizzle-orm/libsql"
 
 const url = process.env.DB_FILE_NAME
