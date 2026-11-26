@@ -1,5 +1,7 @@
 import { getSession } from "@/lib/session";
 import { deleteNote, getNoteById, updateNote } from "@/lib/notes-db";
+import { noteTextSchema } from "@/lib/validations/notes";
+
 
 type RouteParams = { params: Promise<{ id: string }> };
 
@@ -25,14 +27,16 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   }
 
   const { id } = await params;
-  const body = await request.json();
-  const text = typeof body.text === "string" ? body.text.trim() : "";
+  cconst result = noteTextSchema.safeParse(await request.json());
 
-  if (text === "") {
-    return Response.json({ error: "Text is required" }, { status: 400 });
-  }
+if (!result.success) {
+  return Response.json(
+    { error: result.error.issues[0].message },
+    { status: 400 },
+  );
+}
 
-  const note = await updateNote(session.user.id, id, text);
+const note = await updateNote(session.user.id, id, result.data.text);
 
   if (!note) {
     return Response.json({ error: "Note not found" }, { status: 404 });

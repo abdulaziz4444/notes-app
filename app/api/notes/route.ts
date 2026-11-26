@@ -1,5 +1,6 @@
 import { getSession } from "@/lib/session";
 import { clearNotes, createNote, getAllNotes } from "@/lib/notes-db";
+import { noteTextSchema } from "@/lib/validations/notes";
 
 export async function GET() {
   const session = await getSession();
@@ -15,14 +16,16 @@ export async function POST(request: Request) {
     return Response.json({ error: "Not logged in" }, { status: 401 })
   }
 
-  const body = await request.json();
-  const text = typeof body.text === "string" ? body.text.trim() : "";
+ const result = noteTextSchema.safeParse(await request.json());
 
-  if (text === "") {
-    return Response.json({ error: "Text is required" }, { status: 400 });
-  }
+if (!result.success) {
+  return Response.json(
+    { error: result.error.issues[0].message },
+    { status: 400 },
+  );
+}
 
-  const note = await createNote(session.user.id, text);
+const note = await createNote(session.user.id, result.data.text);
   return Response.json(note, { status: 201 });
 }
 
