@@ -2,7 +2,7 @@ import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
 
 const url = process.env.DATABASE_URL!;
-const isLocaleFile = url.startsWith("file");
+const isLocalFile = url.startsWith("file:");
 
 const shared = {
   schema: ["./db/schema.ts", "./db/auth-schema.ts"],
@@ -10,7 +10,7 @@ const shared = {
 };
 
 export default defineConfig(
-  isLocaleFile
+  isLocalFile
     ? {
         ...shared,
         dialect: "sqlite",

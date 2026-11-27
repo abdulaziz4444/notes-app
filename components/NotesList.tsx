@@ -11,7 +11,7 @@ import {
 
 export default function NotesList() {
   const [notes, setNotes] = useState<Note[]>([]);
-  const [isloading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -57,20 +57,20 @@ export default function NotesList() {
       <form action={addNote} className="flex gap-2">
         <input
           name="text"
-          placeholder="write a note..."
+          placeholder="Write a note..."
           className="flex-1 rounded border p-2"
         />
-        <button className="rounded bg-black px-4 py-2 text-white">add</button>
+        <button className="rounded bg-black px-4 py-2 text-white">Add</button>
       </form>
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
       {notes.length > 0 && (
         <p className="mt-6 text-sm text-gray-600">
-          {notes.length} {notes.length === 1 ? "note" : "Note"}
+          {notes.length} {notes.length === 1 ? "note" : "notes"}
         </p>
       )}
 
-      {isloading ? (
+      {isLoading ? (
         <p className="mt-6 text-gray-500">Loading notes...</p>
       ) : notes.length === 0 ? (
         <p className="mt-6 text-gray-500">No notes yet.</p>

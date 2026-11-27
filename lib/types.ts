@@ -1,6 +1,3 @@
-export type Note = {
-    id: string;
-    text: string;
-    color: string | null;
-    createdAt: string;
-};
+import type { notesTable } from "@/db/schema";
+
+export type Note = typeof notesTable.$inferSelect;

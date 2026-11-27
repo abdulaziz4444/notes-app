@@ -1,27 +1,37 @@
 # Notes App
 
-A simple notes app built with Next.js. Add, delete and clear notes; they are saved in the browser so they stay after a refresh.
+A full-stack notes app built with Next.js. Users sign up, log in, and manage their own private notes.
 
 ## Features
 
-- Add notes (empty notes are blocked)
-- Delete a single note
-- Clear all notes at once
-- Shows the date and time each note was created
-- Notes are saved in localStorage, so they survive a page refresh
+- Sign up, log in and log out (email and password)
+- Protected pages and API: only logged-in users can access notes
+- Each user sees and manages only their own notes
+- Add, edit, delete and clear notes
+- Validation on both the form and the server
 
 ## Tech
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
+- Next.js (App Router), React, TypeScript
+- Tailwind CSS, shadcn/ui
+- Better Auth (authentication)
+- Drizzle ORM with SQLite (local) and Turso (production)
+- Zod (validation)
 
 ## Run locally
 
-```bash
-npm install
-npm run dev
-```
+1. Install packages:
+   ```bash
+   npm install
+   ```
+2. Copy `.env.example` to `.env` and fill in `BETTER_AUTH_SECRET`.
+3. Create the database tables:
+   ```bash
+   npm run db:migrate
+   ```
+4. Start the app:
+   ```bash
+   npm run dev
+   ```
 
 Then open http://localhost:3000
