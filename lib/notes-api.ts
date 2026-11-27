@@ -4,7 +4,7 @@ const API_URL = "/api/notes";
 
 export async function fetchNotes(): Promise<Note[]> {
   const response = await fetch(API_URL);
-  if (!response) throw new Error("failed to load notes");
+  if (!response.ok) throw new Error("Failed to load notes");
   return response.json();
 }
 
