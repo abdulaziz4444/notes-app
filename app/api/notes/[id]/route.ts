@@ -27,7 +27,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   }
 
   const { id } = await params;
-  cconst result = noteTextSchema.safeParse(await request.json());
+  const result = noteTextSchema.safeParse(await request.json());
 
 if (!result.success) {
   return Response.json(
