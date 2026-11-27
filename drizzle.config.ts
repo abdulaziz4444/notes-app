@@ -1,11 +1,27 @@
-import "dotenv/config"
-import { defineConfig } from "drizzle-kit"
+import "dotenv/config";
+import { defineConfig } from "drizzle-kit";
 
-export default defineConfig({
-    schema: ["./db/schema.ts", "./db/auth-schema.ts"],
-    out: "./drizzle",
-    dialect: "sqlite",
-    dbCredentials: {
-       url: process.env.DB_FILE_NAME!,
-    }
-})
+const url = process.env.DATABASE_URL!;
+const isLocaleFile = url.startsWith("file");
+
+const shared = {
+  schema: ["./db/schema.ts", "./db/auth-schema.ts"],
+  out: "./drizzle",
+};
+
+export default defineConfig(
+  isLocaleFile
+    ? {
+        ...shared,
+        dialect: "sqlite",
+        dbCredentials: { url },
+      }
+    : {
+        ...shared,
+        dialect: "turso",
+        dbCredentials: {
+          url,
+          authToken: process.env.DATABASE_AUTH_TOKEN!,
+        },
+      },
+);

@@ -1,10 +1,15 @@
 import "server-only";
-import { drizzle } from "drizzle-orm/libsql"
+import { drizzle } from "drizzle-orm/libsql";
 
-const url = process.env.DB_FILE_NAME
+const url = process.env.DATABASE_URL;
 
 if (!url) {
-    throw new Error("DB_FILE_NAME is not set in .env")
+  throw new Error("DATABASE_URL is not set in .env");
 }
 
-export const db = drizzle(url)
+export const db = drizzle({
+  connection: {
+    url,
+    authToken: process.env.DATABASE_AUTH_TOKEN,
+  },
+});
