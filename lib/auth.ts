@@ -8,7 +8,7 @@ const isDevelopment = process.env.NODE_ENV === "development";
 
 export const auth = betterAuth({
   baseURL: {
-    allowedHosts: ["localhost:3000", "*.vercel.app"],
+    allowedHosts: ["localhost:3000", "*.vercel.app", "*.netlify.app"],
     protocol: isDevelopment ? "http" : "https",
   },
   
