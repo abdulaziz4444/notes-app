@@ -22,3 +22,8 @@ export async function deleteNoteRequest(id: string): Promise<void> {
   const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
   if (!response.ok) throw new Error("Failed to delete note");
 }
+
+export async function clearNotesRequest(): Promise<void> {
+  const response = await fetch(API_URL, { method: "DELETE" });
+  if (!response.ok) throw new Error("Failed to clear notes");
+}

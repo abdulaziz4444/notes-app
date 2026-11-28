@@ -15,7 +15,7 @@ export default function NoteCard ({ note, onDelete }: NoteCardProps) {
            <button
            type="button"
            onClick={() => onDelete(note.id)}
-           className="text-sm text-red-600 hover:underline"
+           className="text-sm text-red-600 hover:underline cursor-pointer"
            >
             Delete
            </button>
