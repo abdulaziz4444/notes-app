@@ -7,6 +7,7 @@ import {
   createNoteRequest,
   deleteNoteRequest,
   fetchNotes,
+  clearNotesRequest,
 } from "@/lib/notes-api";
 
 export default function NotesList() {
@@ -52,6 +53,17 @@ export default function NotesList() {
     }
   }
 
+  async function clearAll() {
+    if (!window.confirm("Delete all your notes?")) return;
+    try {
+      setError(null);
+      await clearNotesRequest();
+      setNotes([]);
+    } catch {
+      setError("Could not clear notes.");
+    }
+  }
+
   return (
     <section className="mt-2">
       <form action={addNote} className="flex gap-2">
@@ -65,9 +77,18 @@ export default function NotesList() {
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
       {notes.length > 0 && (
-        <p className="mt-6 text-sm text-gray-600">
-          {notes.length} {notes.length === 1 ? "note" : "notes"}
-        </p>
+        <div className="mt-6 flex justify-between items-center">
+          <p className="text-sm text-gray-600">
+            {notes.length} {notes.length === 1 ? "Note" : "Notes"}
+          </p>
+          <button
+            type="button"
+            onClick={clearAll}
+            className="text-sm text-red-600 cursor-pointer hover:underline"
+          >
+            Clear all
+          </button>
+        </div>
       )}
 
       {isLoading ? (
